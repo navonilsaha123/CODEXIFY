@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Food</title>
+
+<style>
+body{
+  font-family:Arial, sans-serif;
+  background:#0f0e0c;
+  color:#fff;
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+.container{
+  width:350px;
+  background:#1a1814;
+  padding:30px;
+  border-radius:10px;
+}
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:none;
+  border-radius:5px;
+}
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  background:#e8c87a;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:5px;
+}
+.link{
+  margin-top:10px;
+  font-size:14px;
+  cursor:pointer;
+  color:#e8c87a;
+}
+.hidden{ display:none; }
+#appScreen{
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="container" id="loginPage">
+  <h2>Login</h2>
+  <input type="email" id="emailInput" placeholder="Email">
+  <input type="password" id="passwordInput" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <div class="link" onclick="showSignup()">Create account</div>
+  <div class="link" onclick="resetPasswordFirebase(document.getElementById('emailInput').value)">Forgot password?</div>
+</div>
+
+<!-- SIGNUP -->
+<div class="container hidden" id="signupPage">
+  <h2>Sign Up</h2>
+  <input type="text" id="signupName" placeholder="Full Name">
+  <input type="email" id="signupEmail" placeholder="Email">
+  <input type="password" id="signupPassword" placeholder="Password">
+  <button id="signupBtn">Create Account</button>
+  <div class="link" onclick="showLogin()">Back to login</div>
+</div>
+
+<!-- MAIN APP -->
+<div class="container hidden" id="appScreen">
+  <h2>Welcome to Mood Food 🍽</h2>
+  <h3 id="welcomeUser"></h3>
+  <button onclick="firebaseLogout()">Logout</button>
+</div>
+
+<script>
+function showSignup(){
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("signupPage").classList.remove("hidden");
+}
+function showLogin(){
+  document.getElementById("signupPage").classList.add("hidden");
+  document.getElementById("loginPage").classList.remove("hidden");
+}
+</script>
