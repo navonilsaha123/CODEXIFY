@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>MoodBite | Web Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff383f",
+                        "background-light": "#f8f5f5",
+                        "background-dark": "#130909",
+                    },
+                    fontFamily: { "display": ["Inter", "sans-serif"] }
+                },
+            },
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .active-mood { background-color: #ff383f !important; color: white !important; border-color: #ff383f !important; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2 text-primary">
+                    <span class="material-symbols-outlined text-3xl font-bold">restaurant_menu</span>
+                    <h1 class="text-2xl font-black tracking-tighter">MoodBite</h1>
+                </div>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#" class="text-sm font-bold text-primary">Home</a>
+                    <a href="#" class="text-sm font-medium text-slate-500 hover:text-primary transition-colors">Orders</a>
+                    <a href="#" class="text-sm font-medium text-slate-500 hover:text-primary transition-colors">Offers</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:block text-right mr-2">
+                    <p class="text-xs text-slate-400">Welcome back,</p>
+                    <p class="text-sm font-bold">Rahul Sharma</p>
+                </div>
+                <img class="size-10 rounded-full border-2 border-primary/20 object-cover" src="https://i.pravatar.cc/150?u=rahul" alt="Profile">
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <section class="mb-12">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tight mb-2 leading-tight">
+                Hey Rahul, <br class="md:hidden"> 
+                <span class="text-primary italic">how are you feeling?</span>
+            </h2>
+            <p class="text-slate-500 max-w-xl">We've curated the best dishes near you based on your current vibe. Choose a mood to start exploring.</p>
+        </section>
+
+        <section class="mb-10">
+            <div id="mood-container" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+                <button onclick="filterByMood('Hungry', this)" class="mood-btn active-mood flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all hover:border-primary">
+                    <span class="text-3xl mb-2">😋</span> <span class="font-bold text-sm">Hungry</span>
+                </button>
+                <button onclick="filterByMood('Lazy', this)" class="mood-btn flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all hover:border-primary">
+                    <span class="text-3xl mb-2">😴</span> <span class="font-bold text-sm">Lazy</span>
+                </button>
+                <button onclick="filterByMood('Excited', this)" class="mood-btn flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all hover:border-primary">
+                    <span class="text-3xl mb-2">🤩</span> <span class="font-bold text-sm">Excited</span>
+                </button>
+                <button onclick="filterByMood('Tired', this)" class="mood-btn flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all hover:border-primary">
+                    <span class="text-3xl mb-2">😫</span> <span class="font-bold text-sm">Tired</span>
+                </button>
+                <button onclick="filterByMood('Adventurous', this)" class="mood-btn flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-all hover:border-primary">
+                    <span class="text-3xl mb-2">🤔</span> <span class="font-bold text-sm">Adventurous</span>
+                </button>
+            </div>
+        </section>
+
+        <div class="flex flex-col lg:flex-row gap-10">
+            
+            <div class="flex-1">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 id="result-title" class="text-2xl font-bold">Top Picks</h3>
+                    <div class="flex gap-2">
+                        <span class="material-symbols-outlined p-2 bg-white dark:bg-slate-800 rounded-lg cursor-pointer">tune</span>
+                    </div>
+                </div>
+                
+                <div id="restaurant-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    </div>
+            </div>
+
+            <aside class="hidden lg:block w-80 space-y-8">
+                <div class="bg-primary/5 p-6 rounded-3xl border border-primary/10">
+                    <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">analytics</span> Taste Profile
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">Based on your love for Spicy food.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-12 rounded-lg bg-slate-200 animate-pulse"></div>
+                            <div class="flex-1"><div class="h-3 w-20 bg-slate-200 rounded mb-1"></div><div class="h-2 w-12 bg-primary/20 rounded"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        const restaurants = [
+            { name: "Mamma's Pizza House", mood: "Hungry", tags: "Italian • 25m", rating: 4.8, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600" },
+            { name: "The Green Kitchen", mood: "Lazy", tags: "Salads • 15m", rating: 4.5, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600" },
+            { name: "Burger Fuel King", mood: "Hungry", tags: "American • 20m", rating: 4.9, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600" },
+            { name: "Sakura Zen Sushi", mood: "Adventurous", tags: "Japanese • 35m", rating: 4.7, img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600" },
+            { name: "Hakata Ramen", mood: "Tired", tags: "Japanese • 30m", rating: 4.8, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600" },
+            { name: "Taco Fiesta", mood: "Excited", tags: "Mexican • 22m", rating: 4.6, img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600" }
+        ];
+
+        function filterByMood(selectedMood, btnElement) {
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active-mood'));
+            btnElement.classList.add('active-mood');
+
+            const filtered = restaurants.filter(res => res.mood === selectedMood);
+            renderRestaurants(filtered);
+            document.getElementById('result-title').innerText = `${selectedMood} Dishes`;
+        }
+
+        function renderRestaurants(data) {
+            const container = document.getElementById('restaurant-list');
+            if (data.length === 0) {
+                container.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400">No restaurants found for this mood. Try "Hungry"!</p>`;
+                return;
+            }
+            container.innerHTML = data.map(res => `
+                <div class="card-hover bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-700 flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${res.img}" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold text-slate-900 shadow-sm flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs text-orange-500 fill-1">star</span> ${res.rating}
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <h4 class="font-bold text-lg mb-1">${res.name}</h4>
+                        <p class="text-sm text-slate-500 mb-6">${res.tags}</p>
+                        <button class="mt-auto w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl font-bold transition-colors">Order Now</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = () => filterByMood('Hungry', document.querySelector('.mood-btn'));
+    </script>
+</body>
+</html>
