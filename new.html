@@ -1,143 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mood Food</title>
-
-<style>
-body{
-  font-family:Arial, sans-serif;
-  background:#0f0e0c;
-  color:#fff;
-  margin:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-}
-.container{
-  width:350px;
-  background:#1a1814;
-  padding:30px;
-  border-radius:10px;
-}
-input{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border:none;
-  border-radius:5px;
-}
-button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  background:#e8c87a;
-  font-weight:bold;
-  cursor:pointer;
-  border-radius:5px;
-}
-.link{
-  margin-top:10px;
-  font-size:14px;
-  cursor:pointer;
-  color:#e8c87a;
-}
-.hidden{ display:none; }
-#appScreen{
-  text-align:center;
-}
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood Food — Eat Your Feelings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- TEAMMATE 2: Link the CSS file here -->
+  <link rel="stylesheet" href="part2_styles.css"/>
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div class="container" id="loginPage">
-  <h2>Login</h2>
-  <input type="email" id="emailInput" placeholder="Email">
-  <input type="password" id="passwordInput" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <div class="link" onclick="showSignup()">Create account</div>
+<!-- ===========================
+     TEAMMATE 1 — HTML Structure
+     File: part1_index.html
+     Responsibility: All page markup, layout structure,
+     auth pages, app layout, modal, and semantic HTML
+     =========================== -->
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="loginPage" class="auth-page">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="logo">Mood Food</div>
+      <div class="tagline">— eat your feelings, beautifully</div>
+    </div>
+    <div class="login-visual">
+      <div class="food-emoji-grid">
+        <span>🍜</span><span>🥗</span><span>🍕</span>
+        <span>🍣</span><span>🥘</span><span>🍰</span>
+        <span>🥩</span><span>🍝</span><span>🍱</span>
+      </div>
+    </div>
+    <div class="login-quote">
+      <blockquote>
+        "Tell me what you eat, and I will tell you what you are."<br>
+        <small style="font-size:12px;opacity:.6;font-style:normal;">— Jean Anthelme Brillat-Savarin</small>
+      </blockquote>
+    </div>
+  </div>
+  <div class="auth-right">
+    <h2>Welcome back 👋</h2>
+    <p class="sub">Sign in to discover recipes that match your mood.</p>
+    <div class="error-msg" id="loginError"></div>
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap">
+        <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password"/>
+        <button class="eye-btn" type="button" onclick="togglePw('passwordInput', this)">👁</button>
+      </div>
+    </div>
+    <div class="form-options">
+      <label><input type="checkbox" id="rememberMe"/> Remember me</label>
+      <button class="link-btn" onclick="showPage('forgotPage')">Forgot password?</button>
+    </div>
+    <button class="primary-btn" id="loginBtn">Sign in</button>
+    <div class="divider"><span>or</span></div>
+    <button class="ghost-btn" id="guestBtn">Continue as Guest</button>
+    <p class="signup-prompt">Don't have an account? <button onclick="showPage('signupPage')">Create one free</button></p>
+  </div>
 </div>
 
-<!-- SIGNUP -->
-<div class="container hidden" id="signupPage">
-  <h2>Sign Up</h2>
-  <input type="text" id="signupName" placeholder="Full Name">
-  <input type="email" id="signupEmail" placeholder="Email">
-  <input type="password" id="signupPassword" placeholder="Password">
-  <button onclick="signup()">Create Account</button>
-  <div class="link" onclick="showLogin()">Back to login</div>
+<!-- ===== SIGN UP PAGE ===== -->
+<div id="signupPage" class="auth-page hidden">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="logo">Mood Food</div>
+      <div class="tagline">— eat your feelings, beautifully</div>
+    </div>
+    <div class="login-visual">
+      <div class="food-emoji-grid">
+        <span>🍜</span><span>🥗</span><span>🍕</span>
+        <span>🍣</span><span>🥘</span><span>🍰</span>
+        <span>🥩</span><span>🍝</span><span>🍱</span>
+      </div>
+    </div>
+    <div class="login-quote">
+      <blockquote>
+        "One cannot think well, love well, sleep well, if one has not dined well."<br>
+        <small style="font-size:12px;opacity:.6;font-style:normal;">— Virginia Woolf</small>
+      </blockquote>
+    </div>
+  </div>
+  <div class="auth-right">
+    <button class="back-link" onclick="showPage('loginPage')">← Back to sign in</button>
+    <h2>Create account ✨</h2>
+    <p class="sub">Join and start matching meals to your mood.</p>
+    <div class="error-msg" id="signupError"></div>
+    <div class="success-msg" id="signupSuccess"></div>
+
+    <div class="form-group">
+      <label>Full name</label>
+      <input type="text" id="signupName" placeholder="Your name"/>
+    </div>
+
+    <!-- Email or Phone tabs -->
+    <div class="contact-tabs" id="signupContactTabs">
+      <button class="contact-tab active" onclick="switchContactTab('email')">📧 Email</button>
+      <button class="contact-tab" onclick="switchContactTab('phone')">📱 Phone</button>
+    </div>
+
+    <div class="form-group" id="signupEmailGroup">
+      <label>Email address</label>
+      <input type="email" id="signupEmail" placeholder="you@example.com"/>
+    </div>
+
+    <div class="form-group" id="signupPhoneGroup" style="display:none">
+      <label>Phone number</label>
+      <div class="phone-row">
+        <select id="signupCountryCode">
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+91" selected>🇮🇳 +91</option>
+          <option value="+61">🇦🇺 +61</option>
+          <option value="+49">🇩🇪 +49</option>
+          <option value="+33">🇫🇷 +33</option>
+          <option value="+81">🇯🇵 +81</option>
+          <option value="+86">🇨🇳 +86</option>
+          <option value="+55">🇧🇷 +55</option>
+          <option value="+27">🇿🇦 +27</option>
+          <option value="+234">🇳🇬 +234</option>
+          <option value="+971">🇦🇪 +971</option>
+          <option value="+966">🇸🇦 +966</option>
+          <option value="+62">🇮🇩 +62</option>
+          <option value="+60">🇲🇾 +60</option>
+        </select>
+        <input type="tel" id="signupPhone" placeholder="9876543210"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap">
+        <input type="password" id="signupPassword" placeholder="Min 8 characters" oninput="checkStrength(this.value)"/>
+        <button class="eye-btn" type="button" onclick="togglePw('signupPassword', this)">👁</button>
+      </div>
+      <div class="pw-strength">
+        <div class="pw-strength-bar"><div class="pw-strength-fill" id="strengthFill"></div></div>
+        <span class="pw-strength-label" id="strengthLabel">Enter a password</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm password</label>
+      <div class="input-wrap">
+        <input type="password" id="signupConfirm" placeholder="Repeat password"/>
+        <button class="eye-btn" type="button" onclick="togglePw('signupConfirm', this)">👁</button>
+      </div>
+    </div>
+
+    <button class="primary-btn" id="signupBtn" style="animation-delay:.5s">Create account</button>
+    <p class="signup-prompt" style="animation:fadeUp .5s ease .55s both">Already have an account? <button onclick="showPage('loginPage')">Sign in</button></p>
+  </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="container hidden" id="appScreen">
-  <h2>Welcome to Mood Food 🍽</h2>
-  <h3 id="welcomeUser"></h3>
-  <button onclick="logout()">Logout</button>
+<!-- ===== FORGOT PASSWORD PAGE ===== -->
+<div id="forgotPage" class="auth-page hidden">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="logo">Mood Food</div>
+      <div class="tagline">— eat your feelings, beautifully</div>
+    </div>
+    <div class="login-visual">
+      <div class="food-emoji-grid">
+        <span>🔑</span><span>🍜</span><span>🥗</span>
+        <span>🍕</span><span>🔒</span><span>🍰</span>
+        <span>🥩</span><span>🍝</span><span>🔓</span>
+      </div>
+    </div>
+    <div class="login-quote">
+      <blockquote>
+        "Good food is the foundation of genuine happiness."<br>
+        <small style="font-size:12px;opacity:.6;font-style:normal;">— Auguste Escoffier</small>
+      </blockquote>
+    </div>
+  </div>
+  <div class="auth-right">
+    <button class="back-link" onclick="showPage('loginPage')">← Back to sign in</button>
+    <h2>Reset password 🔑</h2>
+    <p class="sub">We'll send a verification code to your registered contact.</p>
+    <div class="error-msg" id="forgotError"></div>
+    <div class="success-msg" id="forgotSuccess"></div>
+
+    <div class="contact-tabs">
+      <button class="contact-tab active" onclick="switchForgotTab('email')">📧 Email</button>
+      <button class="contact-tab" onclick="switchForgotTab('phone')">📱 Phone</button>
+    </div>
+
+    <!-- Step 1: Enter contact -->
+    <div id="forgotStep1">
+      <div class="form-group" id="forgotEmailGroup">
+        <label>Email address</label>
+        <input type="email" id="forgotEmail" placeholder="you@example.com"/>
+      </div>
+      <div class="form-group" id="forgotPhoneGroup" style="display:none">
+        <label>Phone number</label>
+        <div class="phone-row">
+          <select id="forgotCountryCode">
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+91" selected>🇮🇳 +91</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+81">🇯🇵 +81</option>
+            <option value="+86">🇨🇳 +86</option>
+            <option value="+55">🇧🇷 +55</option>
+            <option value="+27">🇿🇦 +27</option>
+          </select>
+          <input type="tel" id="forgotPhone" placeholder="9876543210"/>
+        </div>
+      </div>
+      <button class="primary-btn" onclick="sendOTP()" style="animation-delay:.4s">Send verification code</button>
+    </div>
+
+    <!-- Step 2: Verify OTP -->
+    <div id="forgotStep2" style="display:none">
+      <p class="otp-hint" id="otpHintText">Enter the 6-digit code sent to you.</p>
+      <div class="otp-row">
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+        <input class="otp-input" maxlength="1" type="text" inputmode="numeric"/>
+      </div>
+      <button class="primary-btn" onclick="verifyOTP()" style="margin-top:4px">Verify code</button>
+      <div class="otp-resend">Didn't receive it? <button onclick="sendOTP(true)">Resend code</button></div>
+    </div>
+
+    <!-- Step 3: New password -->
+    <div id="forgotStep3" style="display:none">
+      <div class="form-group">
+        <label>New password</label>
+        <div class="input-wrap">
+          <input type="password" id="newPw1" placeholder="Min 8 characters" oninput="checkStrength2(this.value)"/>
+          <button class="eye-btn" type="button" onclick="togglePw('newPw1', this)">👁</button>
+        </div>
+        <div class="pw-strength">
+          <div class="pw-strength-bar"><div class="pw-strength-fill" id="strengthFill2"></div></div>
+          <span class="pw-strength-label" id="strengthLabel2">Enter a password</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm new password</label>
+        <div class="input-wrap">
+          <input type="password" id="newPw2" placeholder="Repeat password"/>
+          <button class="eye-btn" type="button" onclick="togglePw('newPw2', this)">👁</button>
+        </div>
+      </div>
+      <button class="primary-btn" onclick="resetPassword()">Set new password</button>
+    </div>
+  </div>
 </div>
 
-<script>
+<!-- ===== MAIN APP ===== -->
+<div id="appWrapper">
+  <header>
+    <h1>Mood Food</h1>
+    <span class="header-tagline">— eat your feelings, beautifully</span>
+    <div class="user-chip">
+      <button class="profile-trigger" id="profileTrigger" title="Open profile">
+        <div class="user-avatar" id="userAvatar">G</div>
+        <span class="user-name" id="userName">Guest</span>
+        <span class="profile-caret">▾</span>
+      </button>
+    </div>
+  </header>
 
-// Switch to signup page
-function showSignup(){
-  document.getElementById("loginPage").classList.add("hidden");
-  document.getElementById("signupPage").classList.remove("hidden");
-}
+  <!-- ===== PROFILE PANEL ===== -->
+  <div id="profileOverlay" class="profile-overlay"></div>
+  <aside id="profilePanel" class="profile-panel">
+    <div class="profile-panel-header">
+      <div class="profile-panel-avatar" id="profilePanelAvatar">G</div>
+      <div>
+        <div class="profile-panel-name" id="profilePanelName">Guest</div>
+        <div class="profile-panel-email" id="profilePanelEmail">guest@moodfood.com</div>
+      </div>
+      <button class="profile-panel-close" id="profilePanelClose">✕</button>
+    </div>
 
-// Switch to login page
-function showLogin(){
-  document.getElementById("signupPage").classList.add("hidden");
-  document.getElementById("loginPage").classList.remove("hidden");
-}
+    <div class="profile-subtab-nav">
+      <button class="profile-subtab active" data-subtab="dashboard">📊 Dashboard</button>
+      <button class="profile-subtab" data-subtab="history">🕐 History</button>
+      <button class="profile-subtab" data-subtab="security">🔒 Security</button>
+    </div>
 
-// Fake signup (demo purpose)
-function signup(){
-  const name = document.getElementById("signupName").value;
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
+    <!-- Dashboard sub-panel -->
+    <div class="profile-subpanel active" id="subpanel-dashboard">
+      <div class="resume-banner" id="resumeBanner" style="display:none" onclick="resumeSession()">
+        <div class="resume-icon" id="resumeIcon">▶️</div>
+        <div class="resume-text">
+          <h4 id="resumeTitle">Continue where you left off</h4>
+          <p id="resumeDesc">Resume your last session</p>
+        </div>
+        <div class="resume-arrow">→</div>
+      </div>
 
-  if(!name || !email || !password){
-    alert("Fill all fields");
-    return;
-  }
+      <div class="profile-stats">
+        <div class="pstat"><span class="pstat-val" id="statViewed">0</span><span class="pstat-lbl">Viewed</span></div>
+        <div class="pstat"><span class="pstat-val" id="statFavs">0</span><span class="pstat-lbl">Saved</span></div>
+        <div class="pstat"><span class="pstat-val" id="statMoods">0</span><span class="pstat-lbl">Moods</span></div>
+        <div class="pstat"><span class="pstat-val" id="statCountries">0</span><span class="pstat-lbl">Cuisines</span></div>
+      </div>
 
-  localStorage.setItem("userName", name);
-  alert("Account created successfully!");
-  showLogin();
-}
+      <div class="mood-history-chart">
+        <p class="dash-section-title">Mood frequency</p>
+        <div class="chart-bars" id="moodChart"></div>
+      </div>
 
-// Fake login (demo purpose)
-function login(){
-  const email = document.getElementById("emailInput").value;
-  const password = document.getElementById("passwordInput").value;
+      <p class="dash-section-title">❤️ Saved favourites</p>
+      <div class="fav-grid" id="favGrid"></div>
+    </div>
 
-  if(!email || !password){
-    alert("Enter email & password");
-    return;
-  }
+    <!-- History sub-panel -->
+    <div class="profile-subpanel" id="subpanel-history">
+      <div class="history-controls">
+        <div class="history-filter-btns">
+          <button class="hf-btn active" data-hf="all">All</button>
+          <button class="hf-btn" data-hf="recipe">Recipes</button>
+          <button class="hf-btn" data-hf="mood">Moods</button>
+          <button class="hf-btn" data-hf="search">Searches</button>
+        </div>
+        <button class="clear-history-btn" id="clearHistoryBtn">🗑 Clear</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
 
-  const name = localStorage.getItem("userName");
+    <!-- Security / Change Password sub-panel -->
+    <div class="profile-subpanel" id="subpanel-security">
+      <p class="dash-section-title">🔒 Security</p>
 
-  if(name){
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("appScreen").classList.remove("hidden");
-    document.getElementById("welcomeUser").innerText = "Hello, " + name;
-  } else {
-    alert("No account found. Please signup first.");
-  }
-}
+      <div id="securityGuestNote" style="display:none" class="empty-state">
+        <span class="empty-icon">👤</span>
+        You're signed in as a guest.<br>
+        <button onclick="closeProfile();showPage('signupPage')" style="color:var(--accent);background:none;border:none;cursor:pointer;font-size:14px;margin-top:10px;font-family:'Fraunces',serif;">Create a full account →</button>
+      </div>
 
-// Logout
-function logout(){
-  document.getElementById("appScreen").classList.add("hidden");
-  document.getElementById("loginPage").classList.remove("hidden");
-}
+      <div id="securityUserSection">
+        <div class="change-pw-section">
+          <h4>Change password</h4>
+          <p>Update your account password at any time.</p>
+          <div class="error-msg" id="changePwError" style="margin-bottom:12px;"></div>
+          <div class="success-msg" id="changePwSuccess" style="margin-bottom:12px;"></div>
+          <div class="form-group">
+            <label>Current password</label>
+            <div class="input-wrap">
+              <input type="password" id="cpCurrentPw" placeholder="Your current password"/>
+              <button class="eye-btn" type="button" onclick="togglePw('cpCurrentPw', this)">👁</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>New password</label>
+            <div class="input-wrap">
+              <input type="password" id="cpNewPw" placeholder="Min 8 characters" oninput="checkStrength3(this.value)"/>
+              <button class="eye-btn" type="button" onclick="togglePw('cpNewPw', this)">👁</button>
+            </div>
+            <div class="pw-strength">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="strengthFill3"></div></div>
+              <span class="pw-strength-label" id="strengthLabel3">Enter a new password</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Confirm new password</label>
+            <div class="input-wrap">
+              <input type="password" id="cpConfirmPw" placeholder="Repeat new password"/>
+              <button class="eye-btn" type="button" onclick="togglePw('cpConfirmPw', this)">👁</button>
+            </div>
+          </div>
+          <button class="inline-btn" id="changePwBtn">Update password</button>
+        </div>
 
-</script>
+        <div style="margin-top:20px;padding:18px;background:var(--card);border:1px solid var(--border);border-radius:12px;">
+          <h4 style="font-family:'Fraunces',serif;font-size:15px;margin-bottom:4px;">Danger zone</h4>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Actions here cannot be undone.</p>
+          <button onclick="doLogout()" style="width:100%;padding:10px;background:none;border:1px solid rgba(255,100,100,.4);border-radius:8px;color:#ff7070;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(255,100,100,.08)'" onmouseout="this.style.background='none'">Sign out of all sessions</button>
+        </div>
+      </div>
+    </div>
 
+    <div class="profile-panel-footer">
+      <button class="logout-btn" id="logoutBtn" style="width:100%;border-radius:8px;padding:10px;font-size:14px;text-align:center;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.borderColor='var(--text)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN PAGES ===== -->
+  <div id="homePage">
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="mood"><span class="tab-icon">🎭</span> Mood Picker</button>
+      <button class="tab-btn" data-tab="search"><span class="tab-icon">🔍</span> Search</button>
+    </nav>
+
+    <!-- MOOD TAB -->
+    <div class="tab-panel active" id="tab-mood">
+      <div class="mood-tab-header">
+        <h2>How are you feeling right now?</h2>
+        <p>Pick your mood — we'll fetch hundreds of dishes from around the world.</p>
+      </div>
+      <div class="moods-grid" id="moodsGrid"></div>
+    </div>
+
+    <!-- SEARCH TAB -->
+    <div class="tab-panel" id="tab-search">
+      <div class="search-tab-header">
+        <h2>Search any dish in the world</h2>
+        <p>Find recipes by name, or browse by category.</p>
+      </div>
+      <div class="global-search-wrap">
+        <input type="text" id="globalSearchInput" placeholder='Try "spaghetti", "chicken", "biryani"…' autocomplete="off"/>
+        <button class="search-submit-btn" id="globalSearchBtn">🔍</button>
+      </div>
+      <div class="category-chips" id="categoryChips"></div>
+      <div id="searchResultsWrap"></div>
+    </div>
+  </div>
+
+  <!-- MOOD RESULTS SECTION -->
+  <section id="resultsSection">
+    <div class="results-header">
+      <h2 id="resultsTitle">Recipes for your mood</h2>
+      <div class="results-meta">
+        <span id="mealCount"></span>
+        <button class="change-mood-btn" id="changeMoodBtn">↩ Back to home</button>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="filterInput" placeholder="Filter dishes by name or category…"/>
+    </div>
+    <div class="recipes-grid" id="recipesGrid"></div>
+  </section>
+</div>
+
+<!-- ===== RECIPE MODAL ===== -->
+<div id="modal">
+  <div id="modalContent">
+    <img id="modalImg" src="" alt=""/>
+    <div class="modal-body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;">
+        <h2 id="modalName" style="margin:0"></h2>
+        <button class="modal-fav-btn" id="modalFavBtn">♡ Save</button>
+      </div>
+      <div class="modal-tags" id="modalTags"></div>
+      <p class="modal-section-label">Ingredients</p>
+      <ul class="modal-ingredients" id="modalIngredients"></ul>
+      <p class="modal-section-label">Instructions</p>
+      <div class="modal-instructions" id="modalInstructions"></div>
+      <div class="modal-actions">
+        <button class="modal-close" id="modalCloseBtn">Close</button>
+        <a class="modal-yt" id="modalYt" href="#" target="_blank">▶ Watch on YouTube</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAMMATE 3: Link the JS file here -->
+<script src="part3_app.js"></script>
 </body>
 </html>
